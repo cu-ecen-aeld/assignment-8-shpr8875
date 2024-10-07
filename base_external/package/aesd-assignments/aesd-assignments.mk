@@ -4,8 +4,11 @@
 # AESD-ASSIGNMENTS
 #
 ##############################################################
+#Assignment4 part 2:
+#AESD_ASSIGNMENTS_VERSION = '43e6c4501b016e1ed16480a98714d706bcd96e99'
 
-AESD_ASSIGNMENTS_VERSION = '43e6c4501b016e1ed16480a98714d706bcd96e99'
+#Assignment5 part 2:
+AESD_ASSIGNMENTS_VERSION = '1644e63cb2b86209b3cd4b393984165a32a23c70'
 # Note: Be sure to reference the *ssh* repository URL here (not https) to work properly
 # with ssh keys and the automated build/test system.
 # Your site should start with git@github.com:
@@ -26,6 +29,8 @@ define AESD_ASSIGNMENTS_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/finder-app/finder.sh $(TARGET_DIR)/root
 	$(INSTALL) -D -m 0755 $(@D)/finder-app/writer $(TARGET_DIR)/root
 	$(INSTALL) -D -m 0755 $(@D)/finder-app/finder-test.sh $(TARGET_DIR)/root
+	$(INSTALL) -m 0755 $(@D)/server/aesdsocket $(TARGET_DIR)/usr/bin
+    	$(INSTALL) -m 0755 $(@D)/server/aesdsocket-start-stop $(TARGET_DIR)/etc/init.d/S99aesdsocket
 	
 endef
 
