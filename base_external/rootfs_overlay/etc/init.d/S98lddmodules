@@ -1,0 +1,54 @@
+#Author: Shweta Prasad
+#!/bin/sh
+
+load_kernel_module() {
+    mod_name=$1
+    devices="$2"
+
+    modprobe "$mod_name" || { echo "Failed to load $mod_name"; exit 1; }
+
+    # Manage device nodes if specified
+    if [ -n "$devices" ]; then
+        major_num=$(awk "\$2==\"$mod_name\" {print \$1}" /proc/devices)
+        for device in $devices; do
+            mknod "$device" c "$major_num" 0 || echo "Error: Unable to create device $device"
+        done
+    fi
+}
+
+unload_kernel_module() {
+    mod_name=$1
+    devices="$2"
+
+    # Unload the module
+    rmmod "$mod_name" || { echo "Failed to unload $mod_name"; exit 1; }
+
+    # Manage device nodes if specified
+    if [ -n "$devices" ]; then
+        for device in $devices; do
+            rm -f "$device" || echo "Error: Unable to remove device $device"
+        done
+    fi
+}
+
+# Main script logic to handle commands
+case "$1" in
+    start)
+        echo "Loading modules..."
+        load_kernel_module scull /dev/scull
+        load_kernel_module faulty /dev/faulty
+        load_kernel_module hello ""
+        ;;
+    stop)
+        echo "Unloading modules..."
+        unload_kernel_module scull /dev/scull
+        unload_kernel_module faulty /dev/faulty
+        unload_kernel_module hello ""
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0
