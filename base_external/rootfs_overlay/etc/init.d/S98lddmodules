@@ -34,12 +34,15 @@ unload_kernel_module() {
 # Main script logic to handle commands
 case "$1" in
     start)
+    	echo "Loading aesdchar module..."
+        modprobe aesdchar || { echo "Failed to load aesdchar"; exit 1; }
         echo "Loading modules..."
         load_kernel_module scull /dev/scull
         load_kernel_module faulty /dev/faulty
         load_kernel_module hello ""
         ;;
     stop)
+    	rmmod aesdchar
         echo "Unloading modules..."
         unload_kernel_module scull /dev/scull
         unload_kernel_module faulty /dev/faulty
